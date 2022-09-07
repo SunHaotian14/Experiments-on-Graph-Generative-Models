@@ -204,3 +204,12 @@ def load_eval_settings(data, orbit_on=True):
                 'orbit':gaussian,
                 'spectral':gaussian_emd}
     return methods, kernels
+
+def load_eval_settings_mod(data, orbit_on=True):
+    # Settings for generic graph generation
+    methods = ['degree', 'cluster', 'orbit', 'spectral'] 
+    kernels = {'degree':gaussian_tv, 
+                'cluster':gaussian_tv, 
+                'orbit':gaussian,
+                'spectral':gaussian_tv}
+    return methods, kernels
