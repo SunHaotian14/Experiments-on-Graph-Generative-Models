@@ -1,0 +1,29 @@
+[I 10:20:09.427 NotebookApp] Writing notebook server cookie secret to /nethome/hsun409/.local/share/jupyter/runtime/notebook_cookie_secret
+[W 2022-09-07 10:20:15.167 LabApp] 'port' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 10:20:15.167 LabApp] 'port' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 10:20:15.167 LabApp] 'allow_origin' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 10:20:15.167 LabApp] 'ip' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 10:20:15.167 LabApp] 'password' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 10:20:15.167 LabApp] 'password' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[I 2022-09-07 10:20:15.179 LabApp] JupyterLab extension loaded from /nethome/hsun409/anaconda3/lib/python3.9/site-packages/jupyterlab
+[I 2022-09-07 10:20:15.180 LabApp] JupyterLab application directory is /nethome/hsun409/anaconda3/share/jupyter/lab
+[I 10:20:15.187 NotebookApp] The port 8888 is already in use, trying another port.
+[I 10:20:15.187 NotebookApp] The port 8889 is already in use, trying another port.
+[I 10:20:15.188 NotebookApp] Serving notebooks from local directory: /mnt/284ac980-b350-4035-8e02-707f671ad89e/hsun409/Experiments-on-Graph-Generative-Models
+[I 10:20:15.188 NotebookApp] Jupyter Notebook 6.4.8 is running at:
+[I 10:20:15.188 NotebookApp] http://dmserv:8890/
+[I 10:20:15.188 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[W 2022-09-07 11:10:41.317 LabApp] 'port' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 11:10:41.317 LabApp] 'port' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 11:10:41.317 LabApp] 'allow_origin' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 11:10:41.317 LabApp] 'ip' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 11:10:41.317 LabApp] 'password' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2022-09-07 11:10:41.317 LabApp] 'password' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[I 2022-09-07 11:10:41.327 LabApp] JupyterLab extension loaded from /nethome/hsun409/anaconda3/lib/python3.9/site-packages/jupyterlab
+[I 2022-09-07 11:10:41.327 LabApp] JupyterLab application directory is /nethome/hsun409/anaconda3/share/jupyter/lab
+[I 11:10:41.333 NotebookApp] The port 8888 is already in use, trying another port.
+[I 11:10:41.334 NotebookApp] The port 8889 is already in use, trying another port.
+[I 11:10:41.334 NotebookApp] Serving notebooks from local directory: /mnt/284ac980-b350-4035-8e02-707f671ad89e/hsun409/Experiments-on-Graph-Generative-Models
+[I 11:10:41.334 NotebookApp] Jupyter Notebook 6.4.8 is running at:
+[I 11:10:41.334 NotebookApp] http://dmserv:8890/
+[I 11:10:41.334 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).

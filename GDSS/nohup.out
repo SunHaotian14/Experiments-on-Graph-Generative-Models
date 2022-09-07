@@ -1,0 +1,6 @@
+[I 00:59:22.688 NotebookApp] The port 8888 is already in use, trying another port.
+[I 00:59:22.694 NotebookApp] Serving notebooks from local directory: /mnt/284ac980-b350-4035-8e02-707f671ad89e/hsun409/Experiments-on-Graph-Generative-Models/GDSS
+[I 00:59:22.694 NotebookApp] 0 active kernels
+[I 00:59:22.694 NotebookApp] The Jupyter Notebook is running at:
+[I 00:59:22.695 NotebookApp] http://127.0.0.1:8889/
+[I 00:59:22.695 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).

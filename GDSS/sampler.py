@@ -3,6 +3,7 @@ import time
 import pickle
 import math
 import torch
+from tqdm import tqdm, trange
 
 from utils.logger import Logger, set_log, start_log, train_log, sample_log, check_log
 from utils.loader import load_ckpt, load_data, load_seed, load_device, load_model_from_ckpt, \
@@ -59,7 +60,7 @@ class Sampler(object):
 
         num_sampling_rounds = math.ceil(len(self.test_graph_list) / self.configt.data.batch_size)
         gen_graph_list = []
-        for r in range(num_sampling_rounds):
+        for r in trange(num_sampling_rounds):
             t_start = time.time()
 
             self.init_flags = init_flags(self.train_graph_list, self.configt).to(self.device[0])
