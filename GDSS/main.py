@@ -33,7 +33,8 @@ def main(work_type_args):
         raise ValueError(f'Wrong type : {work_type_args.type}')
 
 if __name__ == '__main__':
-
+    # torch.cuda.reset()
+    torch.cuda.empty_cache()
     work_type_parser = argparse.ArgumentParser()
     work_type_parser.add_argument('--type', type=str, required=True)
     main(work_type_parser.parse_known_args()[0])
