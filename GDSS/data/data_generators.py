@@ -269,7 +269,7 @@ def generate_dataset(data_dir='data', dataset='community_small'):
         print(max([g.number_of_nodes() for g in graphs]))
 
     else:
-        raise NotImplementedError(f'Dataset {datset} not supproted.')
+        raise NotImplementedError(f'Dataset {dataset} not supproted.')
 
 
 if __name__ == "__main__":
