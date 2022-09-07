@@ -49,7 +49,7 @@ def gaussian(x, y, sigma=1.0):
     dist = np.linalg.norm(x - y, 2)
     return np.exp(-dist * dist / (2 * sigma * sigma))
 
-
+# NOT USED
 def gaussian_tv(x, y, sigma=1.0):
     # -------- convert histogram values x and y to float, and make them equal len --------
     x = x.astype(np.float)
@@ -99,16 +99,15 @@ def compute_mmd(samples1, samples2, kernel, is_hist=True, *args, **kwargs):
         disc(samples2, samples2, kernel, *args, **kwargs) - \
         2 * disc(samples1, samples2, kernel, *args, **kwargs)
 
-
-def compute_emd(samples1, samples2, kernel, is_hist=True, *args, **kwargs):
-    """ EMD between average of two samples
-    """
-
-    # -------- normalize histograms into pmf --------
-    if is_hist:
-        samples1 = [np.mean(samples1)]
-        samples2 = [np.mean(samples2)]
-    return disc(samples1, samples2, kernel, *args, **kwargs), [samples1[0], samples2[0]]
+# NOT USED
+# def compute_emd(samples1, samples2, kernel, is_hist=True, *args, **kwargs):
+#     """ EMD between average of two samples
+#     """
+#     # -------- normalize histograms into pmf --------
+#     if is_hist:
+#         samples1 = [np.mean(samples1)]
+#         samples2 = [np.mean(samples2)]
+#     return disc(samples1, samples2, kernel, *args, **kwargs), [samples1[0], samples2[0]]
 
 
 ### code adapted from https://github.com/idea-iitd/graphgen/blob/master/metrics/mmd.py

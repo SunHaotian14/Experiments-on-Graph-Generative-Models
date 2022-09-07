@@ -8,7 +8,7 @@ from sde import VPSDE, VESDE, subVPSDE
 
 from losses import get_sde_loss_fn
 from solver import get_pc_sampler, S4_solver
-from evaluation.mmd import gaussian, gaussian_emd
+from evaluation.mmd_new import gaussian, gaussian_emd, gaussian_tv
 from utils.ema import ExponentialMovingAverage
 
 

@@ -10,7 +10,7 @@ from utils.loader import load_ckpt, load_data, load_seed, load_device, load_mode
                          load_ema_from_ckpt, load_sampling_fn, load_eval_settings,load_eval_settings_mod
 from utils.graph_utils import adjs_to_graphs, init_flags, quantize, quantize_mol
 from utils.plot import save_graph_list, plot_graphs_list
-from evaluation.stats import eval_graph_list
+from evaluation.stats_new import eval_graph_list
 from utils.mol_utils import gen_mol, mols_to_smiles, load_smiles, canonicalize_smiles, mols_to_nx
 from moses.metrics.metrics import get_all_metrics
 
