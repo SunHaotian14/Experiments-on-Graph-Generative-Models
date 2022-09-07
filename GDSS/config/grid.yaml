@@ -1,10 +1,10 @@
 data: 
   data: grid
   dir: './data'
-  batch_size: 8
+  batch_size: 16 #8
   test_split: 0.2
-  max_node_num: 361
-  max_feat_num: 5
+  max_node_num: 361 #361 
+  max_feat_num: 5 #5
   init: deg
 
 sde:
@@ -35,7 +35,7 @@ model:
 
 train:
   name: test
-  num_epochs: 5000
+  num_epochs: 2500 #5000
   save_interval: 2500
   print_interval: 1000
   reduce_mean: False

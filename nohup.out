@@ -27,3 +27,19 @@
 [I 11:10:41.334 NotebookApp] Jupyter Notebook 6.4.8 is running at:
 [I 11:10:41.334 NotebookApp] http://dmserv:8890/
 [I 11:10:41.334 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[W 13:01:23.972 NotebookApp] 404 GET /hub/api (130.207.126.35) 212.960000ms referer=None
+[I 13:01:23.977 NotebookApp] 302 GET /tree? (130.207.126.35) 0.900000ms
+[W 13:01:29.952 NotebookApp] 401 POST /login? (130.207.126.35) 2.670000ms referer=None
+[W 13:01:41.126 NotebookApp] 404 GET /hub/api (130.207.126.35) 1.280000ms referer=None
+[I 13:01:41.129 NotebookApp] 302 GET /tree? (130.207.126.35) 0.530000ms
+[I 13:01:43.584 NotebookApp] 302 POST /login? (130.207.126.35) 1.190000ms
+[I 13:04:29.787 NotebookApp] Creating new notebook in 
+[I 13:04:29.846 NotebookApp] Writing notebook-signing key to /nethome/hsun409/.local/share/jupyter/notebook_secret
+[I 13:04:29.924 NotebookApp] Kernel started: 939a7a5b-824f-4415-9ac4-67a5409ea8e1, name: python3
+[W 13:04:29.948 NotebookApp] delete /Baseline_Test-jvsc-f8719963-6451-4a86-98a5-ca1da0aba8dbaa99a327-ca8e-4635-88d1-296407342527.ipynb
+[I 13:04:58.572 NotebookApp] Starting buffering for 939a7a5b-824f-4415-9ac4-67a5409ea8e1:ebae9678-110d-4073-b1c9-7ff2d54f566b
+[I 13:05:17.314 NotebookApp] Kernel restarted: 939a7a5b-824f-4415-9ac4-67a5409ea8e1
+[I 13:05:17.320 NotebookApp] Starting buffering for 939a7a5b-824f-4415-9ac4-67a5409ea8e1:fad182bd-07c6-4d27-95c5-e55077b57dcb
+[I 13:05:17.325 NotebookApp] Restoring connection for 939a7a5b-824f-4415-9ac4-67a5409ea8e1:fad182bd-07c6-4d27-95c5-e55077b57dcb
+[I 13:05:48.481 NotebookApp] Kernel interrupted: 939a7a5b-824f-4415-9ac4-67a5409ea8e1
+[I 13:05:53.627 NotebookApp] Starting buffering for 939a7a5b-824f-4415-9ac4-67a5409ea8e1:fad182bd-07c6-4d27-95c5-e55077b57dcb
