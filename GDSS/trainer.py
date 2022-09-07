@@ -37,14 +37,14 @@ class Trainer(object):
 
         logger = Logger(str(os.path.join(self.log_dir, f'{self.ckpt}.log')), mode='a')
         logger.log(f'{self.ckpt}', verbose=False)
+    
         start_log(logger, self.config)
         train_log(logger, self.config)
 
         self.loss_fn = load_loss_fn(self.config)
 
         # -------- Training --------
-        for epoch in trange(0, (self.config.train.num_epochs), desc = '[Epoch]', position = 1, leave=False):
-
+        for epoch in trange(0, (self.config.train.num_epochs), desc = '[Epoch]'):
             self.train_x = []
             self.train_adj = []
             self.test_x = []
@@ -111,7 +111,6 @@ class Trainer(object):
             logger.log(f'{epoch+1:03d} | {time.time()-t_start:.2f}s | '
                         f'test x: {mean_test_x:.3e} | test adj: {mean_test_adj:.3e} | '
                         f'train x: {mean_train_x:.3e} | train adj: {mean_train_adj:.3e} | ', verbose=False)
-
             # -------- Save checkpoints --------
             if epoch % self.config.train.save_interval == self.config.train.save_interval-1:
                 save_name = f'_{epoch+1}' if epoch < self.config.train.num_epochs - 1 else ''
