@@ -3,13 +3,14 @@ import time
 import pickle
 import math
 import torch
+from tqdm import tqdm, trange
 
 from utils.logger import Logger, set_log, start_log, train_log, sample_log, check_log
-from GDSS.utils.loader import load_ckpt, load_data, load_seed, load_device, load_model_from_ckpt, \
-                         load_ema_from_ckpt, load_sampling_fn, load_eval_settings
+from GDSS.utils.loader_new import load_ckpt, load_data, load_seed, load_device, load_model_from_ckpt, \
+                         load_ema_from_ckpt, load_sampling_fn, load_eval_settings,load_eval_settings_mod
 from utils.graph_utils import adjs_to_graphs, init_flags, quantize, quantize_mol
 from utils.plot import save_graph_list, plot_graphs_list
-from evaluation.stats import eval_graph_list
+from evaluation.stats_new import eval_graph_list
 from utils.mol_utils import gen_mol, mols_to_smiles, load_smiles, canonicalize_smiles, mols_to_nx
 from moses.metrics.metrics import get_all_metrics
 
@@ -59,7 +60,7 @@ class Sampler(object):
 
         num_sampling_rounds = math.ceil(len(self.test_graph_list) / self.configt.data.batch_size)
         gen_graph_list = []
-        for r in range(num_sampling_rounds):
+        for r in trange(num_sampling_rounds):
             t_start = time.time()
 
             self.init_flags = init_flags(self.train_graph_list, self.configt).to(self.device[0])
@@ -74,7 +75,7 @@ class Sampler(object):
         gen_graph_list = gen_graph_list[:len(self.test_graph_list)]
 
         # -------- Evaluation --------
-        methods, kernels = load_eval_settings(self.config.data.data)
+        methods, kernels = load_eval_settings_mod()
         result_dict = eval_graph_list(self.test_graph_list, gen_graph_list, methods=methods, kernels=kernels)
         logger.log(f'MMD_full {result_dict}', verbose=False)
         logger.log('='*100)

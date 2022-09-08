@@ -8,7 +8,7 @@ from scipy.linalg import eigvalsh
 import networkx as nx
 import numpy as np
 
-from evaluation.mmd import process_tensor, compute_mmd, gaussian, gaussian_emd, compute_nspdk_mmd
+from evaluation_new.mmd import process_tensor, compute_mmd, gaussian, gaussian_emd, compute_nspdk_mmd, gaussian_tv, emd
 from utils.graph_utils import adjs_to_graphs
 
 PRINT_TIME = False 
@@ -319,12 +319,12 @@ def eval_torch_batch(ref_batch, pred_batch, methods=None):
 # -------- Evaluate generated generic graphs --------
 def eval_graph_list(graph_ref_list, graph_pred_list, methods=None, kernels=None):
     if methods is None:
-        methods = ['degree', 'cluster', 'orbit']
+        methods = ['degree', 'cluster', 'orbit', 'spectral']
     results = {}
     for method in methods:
         if method == 'nspdk':
             results[method] = METHOD_NAME_TO_FUNC[method](graph_ref_list, graph_pred_list)
         else:
             results[method] = round(METHOD_NAME_TO_FUNC[method](graph_ref_list, graph_pred_list))
-        print('\033[91m' + f'{method:9s}' + '\033[0m' + ' : ' + '\033[94m' +  f'{results[method]:.6f}' + '\033[0m')
+        print('\033[91m' + f'{method:9s}' + '\033[0m' + ' : ' + '\033[94m' +  f'{results[method]:.8f}' + '\033[0m')
     return results
