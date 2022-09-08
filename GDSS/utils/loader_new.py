@@ -196,7 +196,7 @@ def load_model_from_ckpt(params, state_dict, device):
     return model
 
 
-def load_eval_settings(data, orbit_on=True):
+def load_eval_settings():
     # Settings for generic graph generation
     methods = ['degree', 'cluster', 'orbit', 'spectral'] 
     kernels = {'degree':gaussian_emd, 
@@ -205,11 +205,11 @@ def load_eval_settings(data, orbit_on=True):
                 'spectral':gaussian_emd}
     return methods, kernels
 
-def load_eval_settings_mod():
-    # Settings for generic graph generation
-    methods = ['degree', 'cluster', 'orbit', 'spectral'] 
-    kernels = {'degree':gaussian_tv, 
-                'cluster':gaussian_tv, 
-                'orbit':gaussian,
-                'spectral':gaussian_tv}
-    return methods, kernels
+# def load_eval_settings_mod():
+#     # Settings for generic graph generation
+#     methods = ['degree', 'cluster', 'orbit', 'spectral'] 
+#     kernels = {'degree':gaussian_tv, 
+#                 'cluster':gaussian_tv, 
+#                 'orbit':gaussian,
+#                 'spectral':gaussian_tv}
+#     return methods, kernels

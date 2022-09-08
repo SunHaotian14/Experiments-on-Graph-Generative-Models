@@ -4,7 +4,7 @@ import time
 from parsers.parser import Parser
 from parsers.config import get_config
 from trainer import Trainer
-from GDSS.sampler import Sampler, Sampler_mol
+from sampler import Sampler, Sampler_mol
 
 
 def main(work_type_args):

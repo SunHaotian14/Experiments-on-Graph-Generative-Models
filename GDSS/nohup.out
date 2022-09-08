@@ -4,3 +4,10 @@
 [I 00:59:22.694 NotebookApp] The Jupyter Notebook is running at:
 [I 00:59:22.695 NotebookApp] http://127.0.0.1:8889/
 [I 00:59:22.695 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[I 01:33:40.480 NotebookApp] 302 GET / (127.0.0.1) 0.78ms
+[I 01:33:40.523 NotebookApp] 302 GET /tree? (127.0.0.1) 1.47ms
+[W 01:33:43.493 NotebookApp] 401 POST /login?next=%2Ftree%3F (127.0.0.1) 1.67ms referer=http://localhost:8889/login?next=%2Ftree%3F
+[W 01:33:49.130 NotebookApp] 401 POST /login?next=%2Ftree%3F (127.0.0.1) 1.62ms referer=http://localhost:8889/login?next=%2Ftree%3F
+[W 01:34:04.702 NotebookApp] 401 POST /login?next=%2Ftree%3F (127.0.0.1) 1.71ms referer=http://localhost:8889/login?next=%2Ftree%3F
+[W 01:34:57.584 NotebookApp] 401 POST /login?next=%2Ftree%3F (127.0.0.1) 1.73ms referer=http://localhost:8889/login?next=%2Ftree%3F
+[W 01:35:01.698 NotebookApp] 401 POST /login?next=%2Ftree%3F (127.0.0.1) 1.61ms referer=http://localhost:8889/login?next=%2Ftree%3F

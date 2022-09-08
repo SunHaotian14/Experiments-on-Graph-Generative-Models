@@ -5,7 +5,7 @@ import math
 import torch
 
 from utils.logger import Logger, set_log, start_log, train_log, sample_log, check_log
-from GDSS.utils.loader import load_ckpt, load_data, load_seed, load_device, load_model_from_ckpt, \
+from utils.loader import load_ckpt, load_data, load_seed, load_device, load_model_from_ckpt, \
                          load_ema_from_ckpt, load_sampling_fn, load_eval_settings
 from utils.graph_utils import adjs_to_graphs, init_flags, quantize, quantize_mol
 from utils.plot import save_graph_list, plot_graphs_list

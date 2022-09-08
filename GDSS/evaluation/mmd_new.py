@@ -106,18 +106,17 @@ def kernel_parallel_worker(t):
 def disc(samples1, samples2, kernel, is_parallel=True, *args, **kwargs):
   ''' Discrepancy between 2 samples '''
   d = 0
-
   if not is_parallel:
     for s1 in samples1:
       for s2 in samples2:
         d += kernel(s1, s2, *args, **kwargs)
   else:
     with concurrent.futures.ThreadPoolExecutor() as executor:
-      for dist in executor.map(kernel_parallel_worker, [
+      for dist in executor.map(kernel_parallel_worker, 
+      [
           (s1, samples2, partial(kernel, *args, **kwargs)) for s1 in samples1
       ]):
         d += dist
-
   d /= len(samples1) * len(samples2)
   return d
 
@@ -138,8 +137,7 @@ def compute_emd(samples1, samples2, kernel, is_hist=True, *args, **kwargs):
   if is_hist:
     samples1 = [np.mean(samples1)]
     samples2 = [np.mean(samples2)]
-  return disc(samples1, samples2, kernel, *args,
-              **kwargs), [samples1[0], samples2[0]]
+  return disc(samples1, samples2, kernel, *args, **kwargs), [samples1[0], samples2[0]]
 
 
 ### code adapted from https://github.com/idea-iitd/graphgen/blob/master/metrics/mmd.py

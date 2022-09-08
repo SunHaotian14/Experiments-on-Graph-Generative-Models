@@ -59,7 +59,6 @@ def gaussian_tv(x, y, sigma=1.0):
     dist = np.abs(x - y).sum() / 2.0
     return np.exp(-dist * dist / (2 * sigma * sigma))
 
-
 def kernel_parallel_unpacked(x, samples2, kernel):
     d = 0
     for s2 in samples2:
@@ -82,7 +81,9 @@ def disc(samples1, samples2, kernel, is_parallel=True, *args, **kwargs):
     else:
         with concurrent.futures.ProcessPoolExecutor() as executor:
             for dist in executor.map(kernel_parallel_worker,
-                                     [(s1, samples2, partial(kernel, *args, **kwargs)) for s1 in samples1]):
+                [
+                    (s1, samples2, partial(kernel, *args, **kwargs)) for s1 in samples1
+                    ]):
                 d += dist
     d /= len(samples1) * len(samples2)
     return d
@@ -100,14 +101,13 @@ def compute_mmd(samples1, samples2, kernel, is_hist=True, *args, **kwargs):
         2 * disc(samples1, samples2, kernel, *args, **kwargs)
 
 # NOT USED
-# def compute_emd(samples1, samples2, kernel, is_hist=True, *args, **kwargs):
-#     """ EMD between average of two samples
-#     """
-#     # -------- normalize histograms into pmf --------
-#     if is_hist:
-#         samples1 = [np.mean(samples1)]
-#         samples2 = [np.mean(samples2)]
-#     return disc(samples1, samples2, kernel, *args, **kwargs), [samples1[0], samples2[0]]
+def compute_emd(samples1, samples2, kernel, is_hist=True, *args, **kwargs):
+    """ EMD between average of two samples"""
+    # -------- normalize histograms into pmf --------
+    if is_hist:
+        samples1 = [np.mean(samples1)]
+        samples2 = [np.mean(samples2)]
+    return disc(samples1, samples2, kernel, *args, **kwargs), [samples1[0], samples2[0]]
 
 
 ### code adapted from https://github.com/idea-iitd/graphgen/blob/master/metrics/mmd.py

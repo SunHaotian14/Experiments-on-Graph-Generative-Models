@@ -8,7 +8,7 @@ from scipy.linalg import eigvalsh
 import networkx as nx
 import numpy as np
 
-from evaluation_new.mmd import process_tensor, compute_mmd, gaussian, gaussian_emd, compute_nspdk_mmd, gaussian_tv, emd
+from evaluation.mmd_new import process_tensor, compute_mmd, gaussian, gaussian_emd, compute_nspdk_mmd, gaussian_tv, emd
 from utils.graph_utils import adjs_to_graphs
 
 PRINT_TIME = False 
@@ -32,9 +32,7 @@ def degree_stats(graph_ref_list, graph_pred_list, is_parallel=True):
   sample_ref = []
   sample_pred = []
   # in case an empty graph is generated
-  graph_pred_list_remove_empty = [
-      G for G in graph_pred_list if not G.number_of_nodes() == 0
-  ]
+  graph_pred_list_remove_empty = [G for G in graph_pred_list if not G.number_of_nodes() == 0]
   
   prev = datetime.now()
   if is_parallel:
@@ -49,11 +47,9 @@ def degree_stats(graph_ref_list, graph_pred_list, is_parallel=True):
       degree_temp = np.array(nx.degree_histogram(graph_ref_list[i]))
       sample_ref.append(degree_temp)
     for i in range(len(graph_pred_list_remove_empty)):
-      degree_temp = np.array(
-          nx.degree_histogram(graph_pred_list_remove_empty[i]))
+      degree_temp = np.array(nx.degree_histogram(graph_pred_list_remove_empty[i]))
       sample_pred.append(degree_temp)
   mmd_dist = compute_mmd(sample_ref, sample_pred, kernel=gaussian_tv)
-
   elapsed = datetime.now() - prev
   if PRINT_TIME:
     print('Time computing degree mmd: ', elapsed)
@@ -112,15 +108,10 @@ def clustering_worker(param):
 
 
 # -------- Compute clustering coefficients MMD --------
-def clustering_stats(graph_ref_list,
-                     graph_pred_list,
-                     bins=100,
-                     is_parallel=True):
+def clustering_stats(graph_ref_list, graph_pred_list, bins=100, is_parallel=True):
   sample_ref = []
   sample_pred = []
-  graph_pred_list_remove_empty = [
-      G for G in graph_pred_list if not G.number_of_nodes() == 0
-  ]
+  graph_pred_list_remove_empty = [G for G in graph_pred_list if not G.number_of_nodes() == 0]
 
   prev = datetime.now()
   if is_parallel:
@@ -132,7 +123,6 @@ def clustering_stats(graph_ref_list,
       for clustering_hist in executor.map(
           clustering_worker, [(G, bins) for G in graph_pred_list_remove_empty]):
         sample_pred.append(clustering_hist)
-
   else:
     for i in range(len(graph_ref_list)):
       clustering_coeffs_list = list(nx.clustering(graph_ref_list[i]).values())
@@ -141,17 +131,12 @@ def clustering_stats(graph_ref_list,
       sample_ref.append(hist)
 
     for i in range(len(graph_pred_list_remove_empty)):
-      clustering_coeffs_list = list(
-          nx.clustering(graph_pred_list_remove_empty[i]).values())
+      clustering_coeffs_list = list(nx.clustering(graph_pred_list_remove_empty[i]).values())
       hist, _ = np.histogram(
           clustering_coeffs_list, bins=bins, range=(0.0, 1.0), density=False)
       sample_pred.append(hist)
 
-  mmd_dist = compute_mmd(
-      sample_ref,
-      sample_pred,
-      kernel=gaussian_tv,
-      sigma=1.0 / 10)
+  mmd_dist = compute_mmd(sample_ref, sample_pred, kernel=gaussian_tv, sigma=1.0 / 10)
 
   elapsed = datetime.now() - prev
   if PRINT_TIME:
@@ -278,14 +263,7 @@ def orbit_stats_all(graph_ref_list, graph_pred_list):
 
   total_counts_ref = np.array(total_counts_ref)
   total_counts_pred = np.array(total_counts_pred)
-
-  mmd_dist = compute_mmd(
-      total_counts_ref,
-      total_counts_pred,
-      kernel=gaussian_tv,
-      is_hist=False,
-      sigma=30.0)  
-
+  mmd_dist = compute_mmd(total_counts_ref, total_counts_pred, kernel=gaussian_tv, is_hist=False, sigma=30.0)  
   return mmd_dist
 
 ##### code adapted from https://github.com/idea-iitd/graphgen/blob/master/metrics/stats.py
@@ -325,6 +303,6 @@ def eval_graph_list(graph_ref_list, graph_pred_list, methods=None, kernels=None)
         if method == 'nspdk':
             results[method] = METHOD_NAME_TO_FUNC[method](graph_ref_list, graph_pred_list)
         else:
-            results[method] = round(METHOD_NAME_TO_FUNC[method](graph_ref_list, graph_pred_list))
+            results[method] = METHOD_NAME_TO_FUNC[method](graph_ref_list, graph_pred_list)
         print('\033[91m' + f'{method:9s}' + '\033[0m' + ' : ' + '\033[94m' +  f'{results[method]:.8f}' + '\033[0m')
     return results

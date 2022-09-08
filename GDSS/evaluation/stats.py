@@ -92,7 +92,6 @@ def spectral_stats(graph_ref_list, graph_pred_list, KERNEL=gaussian_emd, is_para
         for i in range(len(graph_pred_list_remove_empty)):
             spectral_temp = spectral_worker(graph_pred_list_remove_empty[i])
             sample_pred.append(spectral_temp)
-
     mmd_dist = compute_mmd(sample_ref, sample_pred, kernel=KERNEL)
 
     elapsed = datetime.now() - prev
@@ -122,8 +121,8 @@ def clustering_stats(graph_ref_list, graph_pred_list, KERNEL=gaussian, bins=100,
                                                 [(G, bins) for G in graph_ref_list]):
                 sample_ref.append(clustering_hist)
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            for clustering_hist in executor.map(clustering_worker,
-                                                [(G, bins) for G in graph_pred_list_remove_empty]):
+            for clustering_hist in executor.map(
+                clustering_worker, [(G, bins) for G in graph_pred_list_remove_empty]):
                 sample_pred.append(clustering_hist)
     else:
         for i in range(len(graph_ref_list)):
@@ -219,8 +218,7 @@ def orbit_stats_all(graph_ref_list, graph_pred_list, KERNEL=gaussian):
 
     total_counts_ref = np.array(total_counts_ref)
     total_counts_pred = np.array(total_counts_pred)
-    mmd_dist = compute_mmd(total_counts_ref, total_counts_pred, kernel=KERNEL,
-                           is_hist=False, sigma=30.0)
+    mmd_dist = compute_mmd(total_counts_ref, total_counts_pred, kernel=KERNEL, is_hist=False, sigma=30.0)
 
     elapsed = datetime.now() - prev
     if PRINT_TIME:
@@ -258,7 +256,7 @@ def eval_torch_batch(ref_batch, pred_batch, methods=None):
 # -------- Evaluate generated generic graphs --------
 def eval_graph_list(graph_ref_list, graph_pred_list, methods=None, kernels=None):
     if methods is None:
-        methods = ['degree', 'cluster', 'orbit']
+        methods = ['degree', 'cluster', 'orbit', 'spectral']
     results = {}
     for method in methods:
         if method == 'nspdk':
