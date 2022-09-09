@@ -262,6 +262,8 @@ def eval_graph_list(graph_ref_list, graph_pred_list, methods=None, kernels=None)
         if method == 'nspdk':
             results[method] = METHOD_NAME_TO_FUNC[method](graph_ref_list, graph_pred_list)
         else:
-            results[method] = round(METHOD_NAME_TO_FUNC[method](graph_ref_list, graph_pred_list, kernels[method]), 6)
+            # results[method] = round(METHOD_NAME_TO_FUNC[method](graph_ref_list, graph_pred_list, kernels[method]), 6)
+            results[method] = METHOD_NAME_TO_FUNC[method](graph_ref_list, graph_pred_list, kernels[method])
+
         print('\033[91m' + f'{method:9s}' + '\033[0m' + ' : ' + '\033[94m' +  f'{results[method]:.6f}' + '\033[0m')
     return results

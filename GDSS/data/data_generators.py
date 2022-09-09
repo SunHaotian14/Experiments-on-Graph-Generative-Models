@@ -128,7 +128,7 @@ def load_dataset(data_dir='data', file_name=None, need_set=False):
 
 
 # -------- load ENZYMES, PROTEIN and DD dataset --------
-def graph_load_batch(min_num_nodes=20, max_num_nodes=1000, name='ENZYMES', node_attributes=True, graph_labels=True):
+def graph_load_batch(min_num_nodes=20, max_num_nodes=1000, name='DD', node_attributes=True, graph_labels=True):
     """
     load many graphs, e.g. enzymes
     :return: a list of graphs
@@ -136,7 +136,7 @@ def graph_load_batch(min_num_nodes=20, max_num_nodes=1000, name='ENZYMES', node_
     print('Loading graph dataset: ' + str(name))
     G = nx.Graph()
     # -------- load data --------
-    path = 'dataset/' + name + '/'
+    path = 'data/' + name + '/'
     data_adj = np.loadtxt(path + name + '_A.txt', delimiter=',').astype(int)
     data_node_att = []
     if node_attributes:
@@ -268,6 +268,12 @@ def generate_dataset(data_dir='data', dataset='community_small'):
         save_dataset(data_dir, graphs, dataset)
         print(max([g.number_of_nodes() for g in graphs]))
 
+    elif dataset == 'DD':
+        graphs = graph_load_batch(min_num_nodes=10, max_num_nodes=1000, name=dataset,
+                                    node_attributes=False, graph_labels=True)
+        save_dataset(data_dir, graphs, dataset)
+        print(max([g.number_of_nodes() for g in graphs]))
+
     else:
         raise NotImplementedError(f'Dataset {dataset} not supproted.')
 
@@ -277,6 +283,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate dataset')
     parser.add_argument('--data-dir', type=str, default='data', help='directory to save the generated dataset')
     parser.add_argument('--dataset', type=str, default='community_small', help='dataset to generate',
-                        choices=['ego_small', 'community_small', 'ENZYMES', 'grid'])
+                        choices=['ego_small', 'community_small', 'ENZYMES', 'grid', 'DD'])
     args = parser.parse_args()
     generate_dataset(args.data_dir, args.dataset)
