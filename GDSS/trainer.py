@@ -26,7 +26,7 @@ class Trainer(object):
         self.config.exp_name = ts
         self.ckpt = f'{ts}'
         print('\033[91m' + f'{self.ckpt}' + '\033[0m')
-
+        torch.cuda.empty_cache()
         # -------- Load models, optimizers, ema --------
         self.model_x, self.optimizer_x, self.scheduler_x = load_model_optimizer(self.params_x, self.config.train, 
                                                                                 self.device)
