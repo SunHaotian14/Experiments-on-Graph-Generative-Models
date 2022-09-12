@@ -273,6 +273,12 @@ def generate_dataset(data_dir='data', dataset='community_small'):
                                     node_attributes=False, graph_labels=True)
         save_dataset(data_dir, graphs, dataset)
         print(max([g.number_of_nodes() for g in graphs]))
+    
+    elif dataset == 'FIRSTMM_DB':
+        graphs = graph_load_batch(min_num_nodes=10, max_num_nodes=1000, name=dataset,
+                                    node_attributes=False, graph_labels=True)
+        save_dataset(data_dir, graphs, dataset)
+        print(max([g.number_of_nodes() for g in graphs]))
 
     else:
         raise NotImplementedError(f'Dataset {dataset} not supproted.')
@@ -283,6 +289,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate dataset')
     parser.add_argument('--data-dir', type=str, default='data', help='directory to save the generated dataset')
     parser.add_argument('--dataset', type=str, default='community_small', help='dataset to generate',
-                        choices=['ego_small', 'community_small', 'ENZYMES', 'grid', 'DD'])
+                        choices=['ego_small', 'community_small', 'ENZYMES', 'grid', 'DD', 'FIRSTMM_DB'])
     args = parser.parse_args()
     generate_dataset(args.data_dir, args.dataset)
