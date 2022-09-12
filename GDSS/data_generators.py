@@ -276,6 +276,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate dataset')
     parser.add_argument('--data-dir', type=str, default='data', help='directory to save the generated dataset')
     parser.add_argument('--dataset', type=str, default='community_small', help='dataset to generate',
-                        choices=['ego_small', 'community_small', 'ENZYMES', 'grid'])
+                        choices=['ego_small', 'community_small', 'ENZYMES', 'grid','DD'])
     args = parser.parse_args()
     generate_dataset(args.data_dir, args.dataset)
