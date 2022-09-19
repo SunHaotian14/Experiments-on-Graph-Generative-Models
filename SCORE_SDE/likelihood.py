@@ -80,8 +80,8 @@ def get_likelihood_fn(sde, inverse_scaler, hutchinson_type='Gaussian',
       nfe: An integer. The number of function evaluations used for running the black-box ODE solver.
     """
     with torch.no_grad():
-      # shape = data.shape
-      shape = (1, data.number_of_edges(), data.number_of_nodes())
+      shape = data.shape
+      # shape = (1, data.number_of_edges(), data.number_of_nodes())
       if hutchinson_type == 'Gaussian':
         epsilon = torch.randn_like(data)
       elif hutchinson_type == 'Rademacher':
