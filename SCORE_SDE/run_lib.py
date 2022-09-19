@@ -39,7 +39,7 @@ from absl import flags
 import torch
 from torch.utils import tensorboard
 from torchvision.utils import make_grid, save_image
-from utils import save_checkpoint, restore_checkpoint
+from SCORE_SDE.utils_score import save_checkpoint, restore_checkpoint
 
 FLAGS = flags.FLAGS
 

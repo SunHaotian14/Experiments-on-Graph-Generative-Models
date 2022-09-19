@@ -107,8 +107,8 @@ def get_likelihood_fn(sde, inverse_scaler, hutchinson_type='Gaussian',
       N = np.prod(shape[1:])
       bpd = bpd / N
       # A hack to convert log-likelihoods to bits/dim
-      offset = 7. - inverse_scaler(-1.)
-      bpd = bpd + offset
+      # offset = 7. - inverse_scaler(-1.)
+      # bpd = bpd + offset
       return bpd, z, nfe
 
   return likelihood_fn
