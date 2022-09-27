@@ -1,0 +1,26 @@
+{
+    "data": {
+        "prop_list": "[]",
+        "num_max_node": "1000",
+        "atom_list": "[]"
+    },
+    "model": {
+        "max_size": 1178,
+        "edge_unroll": 12,
+        "node_dim": 54,
+        "bond_dim": 4,
+        "num_flow_layer": 12,
+        "num_rgcn_layer": 3,
+        "nhid": 128,
+        "nout": 128,
+        "use_gpu": true
+    },
+    "lr": 0.001,
+    "weight_decay": 0,
+    "batch_size": 1,
+    "max_epochs": 10,
+    "save_interval": 1,
+    "save_dir": "dd",
+    "num_min_node": 7,
+    "num_max_node": 1000
+}
