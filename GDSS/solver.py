@@ -176,6 +176,9 @@ def get_pc_sampler(sde_x, sde_adj, shape_x, shape_adj, predictor='Euler', correc
       flags = init_flags
       x = mask_x(x, flags)
       adj = mask_adjs(adj, flags)
+      print('adj after masking')
+      print(adj)
+      print((adj > 1e-5).sum(-1))
       diff_steps = sde_adj.N
       timesteps = torch.linspace(sde_adj.T, eps, diff_steps, device=device)
 

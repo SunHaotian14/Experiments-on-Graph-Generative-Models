@@ -58,14 +58,21 @@ class Sampler(object):
         load_seed(self.config.sample.seed)
 
         num_sampling_rounds = math.ceil(len(self.test_graph_list) / self.configt.data.batch_size)
+        # num_sampling_rounds = 10
         gen_graph_list = []
         for r in range(num_sampling_rounds):
             t_start = time.time()
-            ## !!!!!!!!! num_node to print 
             self.init_flags = init_flags(self.train_graph_list, self.configt).to(self.device[0])
 
             x, adj, _ = self.sampling_fn(self.model_x, self.model_adj, self.init_flags)
-
+            if r == 2:
+                print('investigate!')
+                print(self.init_flags)
+                print(self.init_flags.shape)
+                print(self.init_flags.sum(-1))
+                print(x)
+                print(adj)
+                print((adj > 1e-5).sum(-1))
             logger.log(f"Round {r} : {time.time()-t_start:.2f}s")
 
             samples_int = quantize(adj)
