@@ -30,9 +30,9 @@ class Sampler(object):
         load_seed(self.configt.seed)
         self.train_graph_list, self.test_graph_list = load_data(self.configt, get_graph_list=True)
 
-        # self.configt.data.batch_size = len(self.test_graph_list)
+        self.configt.data.batch_size = len(self.test_graph_list)
         ## to generate 1000
-        self.configt.data.batch_size = 128
+        # self.configt.data.batch_size = 128
 
         self.log_folder_name, self.log_dir, _ = set_log(self.configt, is_train=False)
         self.log_name = f"{self.config.ckpt}-sample" + time.strftime("%H:%M:%S", time.localtime())
@@ -61,9 +61,10 @@ class Sampler(object):
         # -------- Generate samples --------
         logger.log(f'GEN SEED: {self.config.sample.seed}')
         load_seed(self.config.sample.seed)
+        
+        num_sampling_rounds = math.ceil(len(self.test_graph_list) / self.configt.data.batch_size)
         ## to generate 1000
-        # num_sampling_rounds = math.ceil(len(self.test_graph_list) / self.configt.data.batch_size)
-        num_sampling_rounds = math.ceil(1000 / self.configt.data.batch_size)
+        # num_sampling_rounds = math.ceil(1000 / self.configt.data.batch_size)
         print(num_sampling_rounds)
         gen_graph_list = []
         for r in range(num_sampling_rounds):
@@ -77,9 +78,12 @@ class Sampler(object):
 
             samples_int = quantize(adj)
             gen_graph_list.extend(adjs_to_graphs(samples_int, True))
+        
+        gen_graph_list = gen_graph_list[:len(self.test_graph_list)]
+        
         ## to generate 1000
-        # gen_graph_list = gen_graph_list[:len(self.test_graph_list)]
-        gen_graph_list = gen_graph_list[:1000]
+        # gen_graph_list = gen_graph_list[:1000]
+
         # -------- Save samples --------
         save_dir = save_graph_list(self.log_folder_name, self.log_name, gen_graph_list)
         with open(save_dir, 'rb') as f:

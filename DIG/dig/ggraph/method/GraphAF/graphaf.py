@@ -5,7 +5,9 @@ from rdkit import Chem
 from dig.ggraph.method import Generator
 from .model import GraphFlowModel, GraphFlowModel_rl, GraphFlowModel_con_rl
 from .train_utils import adjust_learning_rate, DataIterator
-
+import networkx as nx
+import numpy as np
+import time
 
 class GraphAF(Generator):
     r"""
@@ -65,29 +67,31 @@ class GraphAF(Generator):
             total_loss = 0
             for batch, data_batch in enumerate(loader):
                 optimizer.zero_grad()
-                # inp_node_features = data_batch.x #(B, N, node_dim)
-                # inp_adj_features = data_batch.adj #(B, 4, N, N)
-                inp_adj_features, inp_node_features = data_batch 
+                inp_adj_features, inp_node_features = data_batch #(B, N, node_dim)
                 if model_conf_dict['use_gpu']:
-                    inp_node_features = inp_node_features.cuda()
+                    # inp_node_features = inp_node_features.cuda()
                     inp_adj_features = inp_adj_features.cuda()
                 
                 out_z, out_logdet = self.model(inp_node_features, inp_adj_features)
+                # only take loss of adj!
+                # print('out_logdet', out_logdet)
+                # print('out_z', out_z)
                 loss = self.model.log_prob(out_z, out_logdet)
                 loss.backward()
                 optimizer.step()
 
                 total_loss += loss.to('cpu').item()
-                print('Training iteration {} | loss {}'.format(batch, loss.to('cpu').item()))
+                # print('Training iteration {} | loss {}'.format(batch, loss.to('cpu').item()))
 
             avg_loss = total_loss / (batch + 1)
-            print("Training | Average loss {}".format(avg_loss))
+            if epoch % 20 == 0:
+                print("Training {0} | Average loss {1}".format(epoch, avg_loss))
             
             if epoch % save_interval == 0:
                 torch.save(self.model.state_dict(), os.path.join(save_dir, 'rand_gen_ckpt_{}.pth'.format(epoch)))
+                print('saved!')
 
-
-    def run_rand_gen(self, model_conf_dict, checkpoint_path, n_mols=100, num_min_node=7, num_max_node=25, temperature=0.75, atomic_num_list=[6, 7, 8, 9]):
+    def run_rand_gen(self, SEED, max_nodes, model_conf_dict, checkpoint_path, n_mols=1, num_min_node=7, num_max_node=25, temperature=0.75, atomic_num_list=[6, 7, 8, 9]):
         r"""
             Running graph generation for random generation task.
             
@@ -105,23 +109,55 @@ class GraphAF(Generator):
                 all_mols is a list of generated molecules represented by rdkit Chem.Mol objects;
                 pure_valids is a list of integers, all are 0 or 1, indicating whether bond resampling happens.
         """
-        
+        # def get_graph(adj):
+        #     '''
+        #     get a graph from zero-padded adj
+        #     :param adj:
+        #     :return:
+        #     '''
+        #     # remove all zeros rows and columns
+        #     adj = adj[~np.all(adj == 0, axis=1)]
+        #     adj = adj[:, ~np.all(adj == 0, axis=0)]
+        #     adj = np.asmatrix(adj)
+        #     G = nx.from_numpy_matrix(adj)
+        #     return G
+
+        # def pick_connected_component_new(G):
+        #     adj_list = G.adjacency_list()
+        #     for id,adj in enumerate(adj_list):
+        #         id_min = min(adj)
+        #         if id<id_min and id>=1:
+        #         # if id<id_min and id>=4:
+        #             break
+        #     node_list = list(range(id)) # only include node prior than node "id"
+        #     G = G.subgraph(node_list)
+        #     G = max(nx.connected_component_subgraphs(G), key=len)
+        #     return G
+
         self.get_model('rand_gen', model_conf_dict, checkpoint_path)
         self.model.eval()
-        all_mols, pure_valids = [], []
+        # all_mols, pure_valids = [], []
         cnt_mol = 0
+        adj_list = []
+        node_list = []
+        t_start = time.time()
+        ## num_max_node sampled from training set!
 
         while cnt_mol < n_mols:
-            mol, no_resample, num_atoms = self.model.generate(atom_list=atomic_num_list, min_atoms=num_min_node, max_atoms=num_max_node, temperature=temperature)
-            if (num_atoms >= num_min_node):
-                cnt_mol += 1
-                all_mols.append(mol)
-                pure_valids.append(no_resample)
-                if cnt_mol % 10 == 0:
-                    print('Generated {} molecules'.format(cnt_mol))
-        
-        assert cnt_mol == n_mols, 'number of generated molecules does not equal num'        
-        return all_mols, pure_valids
+            # mol, no_resample, num_atoms = self.model.generate(atom_list=atomic_num_list, min_atoms=num_min_node, max_atoms=num_max_node, temperature=temperature)
+            np.random.seed(SEED)
+            idx = np.random.randint(len(max_nodes))
+            adj_mat, node_mat = self.model.generate(atom_list=atomic_num_list, min_atoms=num_min_node, max_atoms=max_nodes[idx], temperature=temperature)
+            adj_list.append(adj_mat.cpu().detach().numpy())
+            node_list.append(node_mat.cpu().detach().numpy())
+            cnt_mol += 1
+            if cnt_mol % 10 == 0:
+                print('Generated {} graphs'.format(cnt_mol))
+        print(f"Time elapsed for {n_mols} samples: {time.time()-t_start:.2f}s")
+
+        assert cnt_mol == n_mols, 'number of generated graphs does not equal num' 
+
+        return adj_list, node_list
 
 
     def train_prop_optim(self, lr, wd, max_iters, warm_up, model_conf_dict, pretrain_path, save_interval, save_dir):

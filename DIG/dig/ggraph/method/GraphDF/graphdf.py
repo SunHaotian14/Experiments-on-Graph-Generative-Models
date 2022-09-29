@@ -5,12 +5,13 @@ from rdkit import Chem
 from dig.ggraph.method import Generator
 from .model import GraphFlowModel, GraphFlowModel_rl, GraphFlowModel_con_rl
 from .train_utils import adjust_learning_rate, DataIterator
-
+import numpy as np
+import time
 
 class GraphDF(Generator):
     r"""
         The method class for GraphDF algorithm proposed in the paper `GraphDF: A Discrete Flow Model for Molecular Graph Generation <https://arxiv.org/abs/2102.01189>`_. This class provides interfaces for running random generation, property
-        optimization, and constrained optimization with GraphDF algorithm. Please refer to the `example codes <https://github.com/divelab/DIG/tree/dig-stable/examples/ggraph/GraphDF>`_ for usage examples.
+        optimization, and constrained optimization with GraphDF algorithm. Please refer to the `benchmark codes <https://github.com/divelab/DIG/tree/dig/benchmarks/ggraph/GraphDF>`_ for usage examples.
     """
 
     def __init__(self):
@@ -66,28 +67,28 @@ class GraphDF(Generator):
             total_loss = 0
             for batch, data_batch in enumerate(loader):
                 optimizer.zero_grad()
-                inp_node_features = data_batch.x #(B, N, node_dim)
-                inp_adj_features = data_batch.adj #(B, 4, N, N)
+                inp_adj_features, inp_node_features = data_batch #(B, N, node_dim)
                 if model_conf_dict['use_gpu']:
-                    inp_node_features = inp_node_features.cuda()
+                    # inp_node_features = inp_node_features.cuda()
                     inp_adj_features = inp_adj_features.cuda()
                 
                 out_z = self.model(inp_node_features, inp_adj_features)
+                # print(out_z.shape)
                 loss = self.model.dis_log_prob(out_z)
                 loss.backward()
                 optimizer.step()
 
                 total_loss += loss.to('cpu').item()
-                print('Training iteration {} | loss {}'.format(batch, loss.to('cpu').item()))
+                # print('Training iteration {} | loss {}'.format(batch, loss.to('cpu').item()))
 
             avg_loss = total_loss / (batch + 1)
-            print("Training | Average loss {}".format(avg_loss))
+            print("Training {0} | Average loss {1}".format(epoch, avg_loss))
             
             if epoch % save_interval == 0:
                 torch.save(self.model.state_dict(), os.path.join(save_dir, 'rand_gen_ckpt_{}.pth'.format(epoch)))
 
 
-    def run_rand_gen(self, model_conf_dict, checkpoint_path, n_mols=100, num_min_node=7, num_max_node=25, temperature=[0.3, 0.3], atomic_num_list=[6, 7, 8, 9]):
+    def run_rand_gen(self, SEED, max_nodes, model_conf_dict, checkpoint_path, n_mols=100, num_min_node=7, num_max_node=25, temperature=[0.3, 0.3], atomic_num_list=[6, 7, 8, 9]):
         r"""
             Running graph generation for random generation task.
 
@@ -108,20 +109,32 @@ class GraphDF(Generator):
 
         self.get_model('rand_gen', model_conf_dict, checkpoint_path)
         self.model.eval()
-        all_mols, pure_valids = [], []
+        # all_mols, pure_valids = [], []
         cnt_mol = 0
+        adj_list = []
+        node_list = []
+        t_start = time.time()
 
         while cnt_mol < n_mols:
-            mol, no_resample, num_atoms = self.model.generate(atom_list=atomic_num_list, min_atoms=num_min_node, max_atoms=num_max_node, temperature=temperature)
-            if (num_atoms >= num_min_node):
-                cnt_mol += 1
-                all_mols.append(mol)
-                pure_valids.append(no_resample)
-                if cnt_mol % 10 == 0:
-                    print('Generated {} molecules'.format(cnt_mol))
+            np.random.seed(SEED)
+            idx = np.random.randint(len(max_nodes))
+            adj_mat, node_mat = self.model.generate(atom_list=atomic_num_list, min_atoms=num_min_node, max_atoms=max_nodes[idx], temperature=temperature)
+            # mol, no_resample, num_atoms = self.model.generate(atom_list=atomic_num_list, min_atoms=num_min_node, max_atoms=num_max_node, temperature=temperature)
+            # if (num_atoms >= num_min_node):
+            #     cnt_mol += 1
+            #     all_mols.append(mol)
+            #     pure_valids.append(no_resample)
+            #     if cnt_mol % 10 == 0:
+            #         print('Generated {} graphs'.format(cnt_mol))
+            adj_list.append(adj_mat.cpu().detach().numpy())
+            node_list.append(node_mat.cpu().detach().numpy())
+            cnt_mol += 1
+            if cnt_mol % 10 == 0:
+                print('Generated {} graphs'.format(cnt_mol))
+        print(f"Time elapsed for {n_mols} samples: {time.time()-t_start:.2f}s")
         
         assert cnt_mol == n_mols, 'number of generated molecules does not equal num'        
-        return all_mols, pure_valids
+        return adj_list, node_list
 
 
     def train_prop_opt(self, lr, wd, max_iters, warm_up, model_conf_dict, pretrain_path, save_interval, save_dir):

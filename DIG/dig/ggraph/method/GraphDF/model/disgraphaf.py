@@ -50,14 +50,15 @@ class DisGraphAF(nn.Module):
 
         for i in range(self.num_flow_layer):
             # update x_deq
-            node_t = self.node_st_net[i](graph_emb_node).type(x.dtype)
-            x_deq = one_hot_add(x_deq, node_t)
+            # node_t = self.node_st_net[i](graph_emb_node).type(x.dtype)
+            # x_deq = one_hot_add(x_deq, node_t)
 
             # update adj_deq
             edge_t = self.edge_st_net[i](graph_node_emb_edge).type(adj.dtype)
             adj_deq = one_hot_add(adj_deq, edge_t)
-
-        return [x_deq, adj_deq]
+            # print('adj_deq:', adj_deq.shape)
+        # return [x_deq, adj_deq]
+        return adj_deq
 
 
     def forward_rl_node(self, x, adj, x_cont):

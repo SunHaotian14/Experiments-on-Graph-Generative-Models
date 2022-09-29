@@ -52,6 +52,7 @@ class RelationGraphConvolution(nn.Module):
 
         # transform
         support = torch.einsum('bid, edh-> beih', x, self.weight)
+        adj = adj[:support.shape[0],:,:,:]
         output = torch.einsum('beij, bejh-> beih', adj,
                               support)  # (batch, e, N, d)
 
@@ -59,8 +60,8 @@ class RelationGraphConvolution(nn.Module):
             output += self.bias
         if self.act is not None:
             output = self.act(output)  # (b, E, N, d)
-        output = output.view(batch_size, self.edge_dim, x.size(
-            1), self.out_features)  # (b, E, N, d)
+        output = output[:, :self.edge_dim, :, :]
+        output = output.view(batch_size, self.edge_dim, x.size(1), self.out_features)  # (b, E, N, d)
 
         if self.aggregate == 'sum':
             # sum pooling #(b, N, d)

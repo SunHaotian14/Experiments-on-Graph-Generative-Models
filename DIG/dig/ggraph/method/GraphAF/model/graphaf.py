@@ -101,7 +101,8 @@ class MaskedGraphAF(nn.Module):
         x_log_jacob = x_log_jacob.view(batch_size, -1).sum(-1)  # (batch)
         adj_log_jacob = adj_log_jacob.view(batch_size, -1).sum(-1)  # (batch)
 
-        return [x_deq, adj_deq], [x_log_jacob, adj_log_jacob]        
+        # return [x_deq, adj_deq], [x_log_jacob, adj_log_jacob]        
+        return adj_deq, adj_log_jacob  
 
 
     def forward_rl_node(self, x, adj, x_cont):
