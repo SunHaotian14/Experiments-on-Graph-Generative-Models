@@ -8,7 +8,7 @@ import pytorch_lightning as pl
 import wandb
 
 from dgd.models.transformer_model import GraphTransformer
-from diffusion.noise_schedule import PredefinedNoiseSchedule
+from dgd.diffusion.noise_schedule import PredefinedNoiseSchedule
 from dgd.diffusion import diffusion_utils
 from dgd.metrics.train_metrics import TrainLoss
 from dgd.metrics.abstract_metrics import SumExceptBatchMetric, SumExceptBatchMSE, NLL

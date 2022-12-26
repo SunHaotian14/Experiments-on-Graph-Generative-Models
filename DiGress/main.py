@@ -19,12 +19,13 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.utilities.warnings import PossibleUserWarning
 
 from dgd import utils
-from dgd.datasets import guacamol_dataset, qm9_dataset, moses_dataset
+# from dgd.datasets import guacamol_dataset, qm9_dataset, moses_dataset
+from dgd.datasets import guacamol_dataset, qm9_dataset
 from dgd.datasets.spectre_dataset import SBMDataModule, Comm20DataModule, PlanarDataModule, SpectreDatasetInfos
 from dgd.metrics.abstract_metrics import TrainAbstractMetricsDiscrete, TrainAbstractMetrics
 from dgd.analysis.spectre_utils import PlanarSamplingMetrics, SBMSamplingMetrics, Comm20SamplingMetrics
-from diffusion_model import LiftedDenoisingDiffusion
-from diffusion_model_discrete import DiscreteDenoisingDiffusion
+from dgd.diffusion_model import LiftedDenoisingDiffusion
+from dgd.diffusion_model_discrete import DiscreteDenoisingDiffusion
 from dgd.metrics.molecular_metrics import TrainMolecularMetrics, SamplingMolecularMetrics, \
     TrainMolecularMetricsDiscrete
 from dgd.analysis.visualization import MolecularVisualization, NonMolecularVisualization
@@ -85,7 +86,7 @@ def setup_wandb(cfg):
     return cfg
 
 
-@hydra.main(version_base='1.1', config_path='../configs', config_name='config')
+@hydra.main(version_base='1.1', config_path='./configs', config_name='config')
 def main(cfg: DictConfig):
     dataset_config = cfg["dataset"]
 
