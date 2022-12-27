@@ -19,7 +19,7 @@ class DiscreteDenoisingDiffusion(pl.LightningModule):
     def __init__(self, cfg, dataset_infos, train_metrics, sampling_metrics, visualization_tools, extra_features,
                  domain_features):
         super().__init__()
-
+        self.sample_time = 0
         input_dims = dataset_infos.input_dims
         output_dims = dataset_infos.output_dims
         nodes_dist = dataset_infos.nodes_dist
@@ -254,6 +254,7 @@ class DiscreteDenoisingDiffusion(pl.LightningModule):
 
         samples = []
         id = 0
+        start = time.time()
         while samples_left_to_generate > 0:
             print(f'Samples left to generate: {samples_left_to_generate}/'
                   f'{self.cfg.general.final_model_samples_to_generate}', end='', flush=True)
@@ -267,12 +268,15 @@ class DiscreteDenoisingDiffusion(pl.LightningModule):
             samples_left_to_save -= to_save
             samples_left_to_generate -= to_generate
             chains_left_to_save -= chains_save
+        self.sample_time = time.time() - start
+        print(f'Done. Sampling took {self.sample_time:.2f} seconds\n')
+
         print("Computing sampling metrics...")
         self.sampling_metrics.reset()
         self.sampling_metrics(samples, self.name, self.current_epoch, self.val_counter, test=True)
         self.sampling_metrics.reset()
         print("Done.")
-
+        wandb.log({"sample_time": self.sample_time}, commit=False)
 
     def kl_prior(self, X, E, y, node_mask):
         """Computes the KL between q(z1 | x) and the prior p(z1) = Normal(0, 1).
@@ -549,9 +553,9 @@ class DiscreteDenoisingDiffusion(pl.LightningModule):
             atom_types = X[i, :n].cpu()
             edge_types = E[i, :n, :n].cpu()
             molecule_list.append([atom_types, edge_types])
-            if i < 3:
-                print("Example of generated E: ", atom_types)
-                print("Example of generated X: ", edge_types)
+            # if i < 3:
+            #     print("Example of generated E: ", atom_types)
+            #     print("Example of generated X: ", edge_types)
 
         predicted_graph_list = []
         for i in range(batch_size):

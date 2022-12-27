@@ -12,8 +12,9 @@ class SpectreGraphDataset(Dataset):
         """ This class can be used to load the comm20, sbm and planar datasets. """
         base_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir, 'data')
         filename = os.path.join(base_path, data_file)
-        self.adjs, self.eigvals, self.eigvecs, self.n_nodes, self.max_eigval, self.min_eigval, self.same_sample, self.n_max = torch.load(
-            filename)
+        self.adjs, _, _, _, _, _, _, _ = torch.load(filename)
+        # self.adjs, self.eigvals, self.eigvecs, self.n_nodes, self.max_eigval, self.min_eigval, self.same_sample, self.n_max = torch.load(
+        #     filename)
         print(f'Dataset {filename} loaded from file')
 
     def __len__(self):

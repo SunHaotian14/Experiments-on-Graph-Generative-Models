@@ -29,7 +29,7 @@ from dgd.analysis.dist_helper import compute_mmd, gaussian_emd, gaussian, emd, g
 from torch_geometric.utils import to_networkx
 import wandb
 
-PRINT_TIME = False
+PRINT_TIME = True
 __all__ = ['degree_stats', 'clustering_stats', 'orbit_stats_all', 'spectral_stats', 'eval_acc_lobster_graph']
 
 
@@ -771,8 +771,8 @@ class SamplingSpectreMetrics(nn.Module):
             networkx_graphs.append(nx_graph)
 
         print("Saving all adjacency matrices")
-        np.savez('generated_adjs.npz', *adjacency_matrices)
-
+        np.savez('generated_adjs1.npz', *adjacency_matrices)
+        np.savez('generated_graphs1.npz', *networkx_graphs)
         print("Computing degree stats..")
         degree = degree_stats(self.test_graphs, networkx_graphs, is_parallel=True,
                               compute_emd=self.compute_emd)
@@ -861,7 +861,8 @@ class SpectreSamplingMetrics(nn.Module):
 
         print("Saving all adjacency matrices")
         np.savez('generated_adjs.npz', *adjacency_matrices)
-
+        np.savez('generated_graphs.npz', *networkx_graphs)
+        to_log = {}
         if 'degree' in self.metrics_list:
             print("Computing degree stats..")
             degree = degree_stats(self.test_graphs, networkx_graphs, is_parallel=True,
@@ -874,7 +875,7 @@ class SpectreSamplingMetrics(nn.Module):
         # eigval_stats(eig_ref_list, eig_pred_list, max_eig=20, is_parallel=True, compute_emd=False)
         # spectral_filter_stats(eigvec_ref_list, eigval_ref_list, eigvec_pred_list, eigval_pred_list, is_parallel=False,
         #                       compute_emd=False)          # This is the one called wavelet
-        to_log = {}
+        
 
         if 'spectre' in self.metrics_list:
             print("Computing spectre stats...")
@@ -936,8 +937,8 @@ class Comm20SamplingMetrics(SpectreSamplingMetrics):
     def __init__(self, dataloaders):
         super().__init__(dataloaders=dataloaders,
                          compute_emd=True,
-                         metrics_list=['degree', 'clustering', 'orbit'])
-
+                         metrics_list=[])
+                        #  metrics_list=['degree', 'clustering', 'orbit'])
 
 class PlanarSamplingMetrics(SpectreSamplingMetrics):
     def __init__(self, dataloaders):
