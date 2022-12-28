@@ -21,9 +21,13 @@ from pytorch_lightning.utilities.warnings import PossibleUserWarning
 from dgd import utils
 # from dgd.datasets import guacamol_dataset, qm9_dataset, moses_dataset
 from dgd.datasets import guacamol_dataset, qm9_dataset
-from dgd.datasets.spectre_dataset import SBMDataModule, Comm20DataModule, PlanarDataModule, SpectreDatasetInfos
+from dgd.datasets.spectre_dataset import BreastDataModule, EnzymesDataModule, EgoDataModule, \
+     CoraDataModule, CommunityDataModule, CavemanDataModule, \
+        Comm20DataModule, PlanarDataModule, SpectreDatasetInfos
 from dgd.metrics.abstract_metrics import TrainAbstractMetricsDiscrete, TrainAbstractMetrics
-from dgd.analysis.spectre_utils import PlanarSamplingMetrics, SBMSamplingMetrics, Comm20SamplingMetrics
+from dgd.analysis.spectre_utils import PlanarSamplingMetrics, Comm20SamplingMetrics, \
+    BreastSamplingMetrics, EnzymesSamplingMetrics, EgoSamplingMetrics, \
+    CoraSamplingMetrics, CommunitySamplingMetrics, CavemanSamplingMetrics
 from dgd.diffusion_model import LiftedDenoisingDiffusion
 from dgd.diffusion_model_discrete import DiscreteDenoisingDiffusion
 from dgd.metrics.molecular_metrics import TrainMolecularMetrics, SamplingMolecularMetrics, \
@@ -90,9 +94,27 @@ def setup_wandb(cfg):
 def main(cfg: DictConfig):
     dataset_config = cfg["dataset"]
 
-    if dataset_config['name'] == 'sbm':
-        datamodule = SBMDataModule(cfg)
-        sampling_metrics = SBMSamplingMetrics(datamodule.dataloaders)
+    if dataset_config['name'] == 'breast':
+        datamodule = BreastDataModule(cfg)
+        sampling_metrics = BreastSamplingMetrics(datamodule.dataloaders)
+    elif dataset_config['name'] == 'breast':
+        datamodule = BreastDataModule(cfg)
+        sampling_metrics = BreastSamplingMetrics(datamodule.dataloaders)
+    elif dataset_config['name'] == 'caveman':
+        datamodule = CavemanDataModule(cfg)
+        sampling_metrics = CavemanSamplingMetrics(datamodule.dataloaders)
+    elif dataset_config['name'] == 'community':
+        datamodule = CommunityDataModule(cfg)
+        sampling_metrics = CommunitySamplingMetrics(datamodule.dataloaders)
+    elif dataset_config['name'] == 'cora':
+        datamodule = CoraDataModule(cfg)
+        sampling_metrics = CoraSamplingMetrics(datamodule.dataloaders)
+    elif dataset_config['name'] == 'ego':
+        datamodule = EgoDataModule(cfg)
+        sampling_metrics = EgoSamplingMetrics(datamodule.dataloaders)
+    elif dataset_config['name'] == 'enzymes':
+        datamodule = EnzymesDataModule(cfg)
+        sampling_metrics = EnzymesSamplingMetrics(datamodule.dataloaders)
     elif dataset_config['name'] == 'comm-20':
         datamodule = Comm20DataModule(cfg)
         sampling_metrics = Comm20SamplingMetrics(datamodule.dataloaders)

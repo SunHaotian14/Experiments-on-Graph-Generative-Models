@@ -940,6 +940,42 @@ class Comm20SamplingMetrics(SpectreSamplingMetrics):
                          metrics_list=[])
                         #  metrics_list=['degree', 'clustering', 'orbit'])
 
+class BreastSamplingMetrics(SpectreSamplingMetrics):
+    def __init__(self, dataloaders):
+        super().__init__(dataloaders=dataloaders,
+                         compute_emd=True,
+                         metrics_list=[])
+
+class CavemanSamplingMetrics(SpectreSamplingMetrics):
+    def __init__(self, dataloaders):
+        super().__init__(dataloaders=dataloaders,
+                         compute_emd=True,
+                         metrics_list=[])
+
+class CommunitySamplingMetrics(SpectreSamplingMetrics):
+    def __init__(self, dataloaders):
+        super().__init__(dataloaders=dataloaders,
+                         compute_emd=True,
+                         metrics_list=[])
+
+class CoraSamplingMetrics(SpectreSamplingMetrics):
+    def __init__(self, dataloaders):
+        super().__init__(dataloaders=dataloaders,
+                         compute_emd=True,
+                         metrics_list=[])
+
+class EgoSamplingMetrics(SpectreSamplingMetrics):
+    def __init__(self, dataloaders):
+        super().__init__(dataloaders=dataloaders,
+                         compute_emd=True,
+                         metrics_list=[])
+
+class EnzymesSamplingMetrics(SpectreSamplingMetrics):
+    def __init__(self, dataloaders):
+        super().__init__(dataloaders=dataloaders,
+                         compute_emd=True,
+                         metrics_list=[])
+
 class PlanarSamplingMetrics(SpectreSamplingMetrics):
     def __init__(self, dataloaders):
         super().__init__(dataloaders=dataloaders,

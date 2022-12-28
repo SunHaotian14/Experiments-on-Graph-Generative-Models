@@ -12,7 +12,12 @@ class SpectreGraphDataset(Dataset):
         """ This class can be used to load the comm20, sbm and planar datasets. """
         base_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir, 'data')
         filename = os.path.join(base_path, data_file)
-        self.adjs, _, _, _, _, _, _, _ = torch.load(filename)
+        print("=================", filename)
+        if "12_21" in filename:
+            self.adjs, _, _, _, _, _, _, _ = torch.load(filename)
+        # self.adjs, _, _, _, _, _, _, _ = torch.load(filename)
+        else:
+            self.adjs = torch.load(filename)
         # self.adjs, self.eigvals, self.eigvecs, self.n_nodes, self.max_eigval, self.min_eigval, self.same_sample, self.n_max = torch.load(
         #     filename)
         print(f'Dataset {filename} loaded from file')
@@ -38,6 +43,29 @@ class Comm20Dataset(SpectreGraphDataset):
     def __init__(self):
         super().__init__('community_12_21_100.pt')
 
+class BreastDataset(SpectreGraphDataset):
+    def __init__(self):
+        super().__init__('breast.pt')
+
+class CavemanDataset(SpectreGraphDataset):
+    def __init__(self):
+        super().__init__('caveman.pt')
+
+class CommunityDataset(SpectreGraphDataset):
+    def __init__(self):
+        super().__init__('community.pt')
+
+class CoraDataset(SpectreGraphDataset):
+    def __init__(self):
+        super().__init__('cora.pt')
+
+class EgoDataset(SpectreGraphDataset):
+    def __init__(self):
+        super().__init__('ego.pt')
+
+class EnzymesDataset(SpectreGraphDataset):
+    def __init__(self):
+        super().__init__('enzymes.pt')
 
 class SBMDataset(SpectreGraphDataset):
     def __init__(self):
@@ -75,6 +103,35 @@ class Comm20DataModule(SpectreGraphDataModule):
         graphs = Comm20Dataset()
         return super().prepare_data(graphs)
 
+class BreastDataModule(SpectreGraphDataModule):
+    def prepare_data(self):
+        graphs = BreastDataset()
+        return super().prepare_data(graphs)
+
+class CavemanDataModule(SpectreGraphDataModule):
+    def prepare_data(self):
+        graphs = CavemanDataset()
+        return super().prepare_data(graphs)
+
+class CommunityDataModule(SpectreGraphDataModule):
+    def prepare_data(self):
+        graphs = CommunityDataset()
+        return super().prepare_data(graphs)
+
+class CoraDataModule(SpectreGraphDataModule):
+    def prepare_data(self):
+        graphs = CoraDataset()
+        return super().prepare_data(graphs)
+
+class EgoDataModule(SpectreGraphDataModule):
+    def prepare_data(self):
+        graphs = EgoDataset()
+        return super().prepare_data(graphs)
+
+class EnzymesDataModule(SpectreGraphDataModule):
+    def prepare_data(self):
+        graphs = EnzymesDataset()
+        return super().prepare_data(graphs)
 
 class SBMDataModule(SpectreGraphDataModule):
     def prepare_data(self):
