@@ -83,7 +83,7 @@ class DiscreteDenoisingDiffusion(pl.LightningModule):
             y_limit = torch.ones(self.ydim_output) / self.ydim_output
             self.limit_dist = utils.PlaceHolder(X=x_limit, E=e_limit, y=y_limit)
         elif cfg.model.transition == 'marginal':
-
+            print("Using marginal uniform transition========")
             node_types = self.dataset_info.node_types.float()
             x_marginals = node_types / torch.sum(node_types)
 

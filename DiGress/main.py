@@ -97,9 +97,6 @@ def main(cfg: DictConfig):
     if dataset_config['name'] == 'breast':
         datamodule = BreastDataModule(cfg)
         sampling_metrics = BreastSamplingMetrics(datamodule.dataloaders)
-    elif dataset_config['name'] == 'breast':
-        datamodule = BreastDataModule(cfg)
-        sampling_metrics = BreastSamplingMetrics(datamodule.dataloaders)
     elif dataset_config['name'] == 'caveman':
         datamodule = CavemanDataModule(cfg)
         sampling_metrics = CavemanSamplingMetrics(datamodule.dataloaders)

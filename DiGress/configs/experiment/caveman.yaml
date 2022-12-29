@@ -1,0 +1,47 @@
+# @package _global_
+general:
+    name : 'caveman_exp'
+    gpus : 1
+    wandb: 'online'
+    resume: null            # If resume, path to ckpt file from outputs directory in main directory
+    test_only: null
+    check_val_every_n_epochs: 1000
+    sample_every_val: 100
+    samples_to_generate: 0
+    samples_to_save: 20
+    chains_to_save: 1
+    log_every_steps: 50
+    number_chain_steps: 50        # Number of frames in each gif
+    final_model_samples_to_generate: 200
+    final_model_samples_to_save: 200
+    final_model_chains_to_save: 200
+
+train:
+    n_epochs: 500
+    batch_size: 64
+    save_model: True
+    lr: 0.0002
+    clip_grad: null          # float, null to disable
+    num_workers: 0
+    ema_decay: 0          # 'Amount of EMA decay, 0 means off. A reasonable value  is 0.999.'
+    progress_bar: True
+    weight_decay: 1e-12
+    optimizer: nadamw # adamw,nadamw,nadam => nadamw for large batches, see http://arxiv.org/abs/2102.06356 for the use of nesterov momentum with large batches
+    amsgrad: true
+    overfit: false
+    seed: 0
+
+model:
+    n_layers: 8
+    lambda_train: [5, 0]
+    type: 'discrete'
+    transition: 'marginal'                          # uniform or marginal
+    model: 'graph_exp'
+    diffusion_steps: 500
+    diffusion_noise_schedule: 'cosine'              # 'cosine', 'polynomial_2'
+    extra_features: 'all'        # 'all', 'cycles', 'eigenvalues' or null
+    # Do not set hidden_mlp_E, dim_ffE too high, computing large tensors on the edges is costly
+    # At the moment (03/08), y contains quite little information
+    hidden_mlp_dims: {'X': 256, 'E': 128, 'y': 128}
+    # The dimensions should satisfy dx % n_head == 0
+    hidden_dims : {'dx': 256, 'de': 64, 'dy': 64, 'n_head': 8, 'dim_ffX': 256, 'dim_ffE': 128, 'dim_ffy': 128}

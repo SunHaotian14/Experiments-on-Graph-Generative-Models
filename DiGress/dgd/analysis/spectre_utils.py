@@ -736,87 +736,87 @@ def eval_fraction_unique_non_isomorphic_valid(fake_graphs, train_graphs, validit
     return frac_unique, frac_unique_non_isomorphic, frac_unique_non_isomorphic_valid
 
 
-class SamplingSpectreMetrics(nn.Module):
-    def __init__(self, dataloaders, compute_emd):
-        super().__init__()
+# class SamplingSpectreMetrics(nn.Module):
+#     def __init__(self, dataloaders, compute_emd):
+#         super().__init__()
 
-        self.train_graphs = self.loader_to_nx(dataloaders['train'])
-        self.val_graphs = self.loader_to_nx(dataloaders['val'])
-        self.test_graphs = self.loader_to_nx(dataloaders['test'])
-        self.num_graphs_test = len(self.test_graphs)
-        self.num_graphs_val = len(self.val_graphs)
-        self.compute_emd = compute_emd
+#         self.train_graphs = self.loader_to_nx(dataloaders['train'])
+#         self.val_graphs = self.loader_to_nx(dataloaders['val'])
+#         self.test_graphs = self.loader_to_nx(dataloaders['test'])
+#         self.num_graphs_test = len(self.test_graphs)
+#         self.num_graphs_val = len(self.val_graphs)
+#         self.compute_emd = compute_emd
 
-    def loader_to_nx(self, loader):
-        networkx_graphs = []
-        for i, batch in enumerate(loader):
-            data_list = batch.to_data_list()
-            for j, data in enumerate(data_list):
-                networkx_graphs.append(to_networkx(data, node_attrs=None, edge_attrs=None, to_undirected=True,
-                                                   remove_self_loops=True))
-        return networkx_graphs
+#     def loader_to_nx(self, loader):
+#         networkx_graphs = []
+#         for i, batch in enumerate(loader):
+#             data_list = batch.to_data_list()
+#             for j, data in enumerate(data_list):
+#                 networkx_graphs.append(to_networkx(data, node_attrs=None, edge_attrs=None, to_undirected=True,
+#                                                    remove_self_loops=True))
+#         return networkx_graphs
 
-    def forward(self, generated_graphs: list, name, current_epoch, val_counter, save_graphs = True):
-        print(f"Computing sampling metrics between {len(generated_graphs)} generated graphs and {len(self.test_graphs)}"
-              f" test graphs -- emd computation: {self.compute_emd}")
-        networkx_graphs = []
-        adjacency_matrices = []
-        print("Building networkx graphs...")
-        for graph in generated_graphs:
-            node_types, edge_types = graph
-            A = edge_types.bool().cpu().numpy()
-            adjacency_matrices.append(A)
+#     def forward(self, generated_graphs: list, name, current_epoch, val_counter, save_graphs = True):
+#         print(f"Computing sampling metrics between {len(generated_graphs)} generated graphs and {len(self.test_graphs)}"
+#               f" test graphs -- emd computation: {self.compute_emd}")
+#         networkx_graphs = []
+#         adjacency_matrices = []
+#         print("Building networkx graphs...")
+#         for graph in generated_graphs:
+#             node_types, edge_types = graph
+#             A = edge_types.bool().cpu().numpy()
+#             adjacency_matrices.append(A)
 
-            nx_graph = nx.from_numpy_array(A)
-            networkx_graphs.append(nx_graph)
+#             nx_graph = nx.from_numpy_array(A)
+#             networkx_graphs.append(nx_graph)
 
-        print("Saving all adjacency matrices")
-        np.savez('generated_adjs1.npz', *adjacency_matrices)
-        np.savez('generated_graphs1.npz', *networkx_graphs)
-        print("Computing degree stats..")
-        degree = degree_stats(self.test_graphs, networkx_graphs, is_parallel=True,
-                              compute_emd=self.compute_emd)
-        wandb.run.summary['degree'] = degree
-        print("Computing spectre stats...")
-        # val_eigvals = [graph["eigval"][1:self.k + 1].cpu().detach().numpy() for graph in self.val]
-        # train_eigvals = [graph["eigval"][1:self.k + 1].cpu().detach().numpy() for graph in self.train]
+#         print("Saving all adjacency matrices")
+#         np.savez('generated_adjs1.npz', *adjacency_matrices)
+#         np.savez('generated_graphs1.npz', *networkx_graphs)
+#         print("Computing degree stats..")
+#         degree = degree_stats(self.test_graphs, networkx_graphs, is_parallel=True,
+#                               compute_emd=self.compute_emd)
+#         wandb.run.summary['degree'] = degree
+#         print("Computing spectre stats...")
+#         # val_eigvals = [graph["eigval"][1:self.k + 1].cpu().detach().numpy() for graph in self.val]
+#         # train_eigvals = [graph["eigval"][1:self.k + 1].cpu().detach().numpy() for graph in self.train]
 
-        # eigval_stats(eig_ref_list, eig_pred_list, max_eig=20, is_parallel=True, compute_emd=False)
-        # spectral_filter_stats(eigvec_ref_list, eigval_ref_list, eigvec_pred_list, eigval_pred_list, is_parallel=False,
-        #                       compute_emd=False)          # This is the one called wavelet
-        spectre = spectral_stats(self.test_graphs, networkx_graphs, is_parallel=True, n_eigvals=-1,
-                                 compute_emd=self.compute_emd)
-        wandb.run.summary['spectre'] = spectre
-        print("Computing clustering stats...")
-        clustering = clustering_stats(self.test_graphs, networkx_graphs, bins=100, is_parallel=True,
-                                      compute_emd=self.compute_emd)
-        wandb.run.summary['clustering'] = clustering
-        motif = motif_stats(self.test_graphs, networkx_graphs, motif_type='4cycle', ground_truth_match=None, bins=100,
-                            compute_emd=self.compute_emd)
-        wandb.run.summary['motif'] = motif
-        print("Computing orbit stats...")
-        orbit = orbit_stats_all(self.test_graphs, networkx_graphs, compute_emd=self.compute_emd)
-        wandb.run.summary['orbit'] = orbit
-        print("Computing accuracy...")
-        acc = eval_acc_sbm_graph(networkx_graphs, refinement_steps=100, strict=True)
-        wandb.run.summary['acc'] = acc
-        print("Computing all fractions...")
-        frac_unique, frac_unique_non_isomorphic, fraction_unique_non_isomorphic_valid = eval_fraction_unique_non_isomorphic_valid(
-            networkx_graphs, self.train_graphs, is_sbm_graph)
-        frac_non_isomorphic = 1.0 - eval_fraction_isomorphic(networkx_graphs, self.train_graphs)
+#         # eigval_stats(eig_ref_list, eig_pred_list, max_eig=20, is_parallel=True, compute_emd=False)
+#         # spectral_filter_stats(eigvec_ref_list, eigval_ref_list, eigvec_pred_list, eigval_pred_list, is_parallel=False,
+#         #                       compute_emd=False)          # This is the one called wavelet
+#         spectre = spectral_stats(self.test_graphs, networkx_graphs, is_parallel=True, n_eigvals=-1,
+#                                  compute_emd=self.compute_emd)
+#         wandb.run.summary['spectre'] = spectre
+#         print("Computing clustering stats...")
+#         clustering = clustering_stats(self.test_graphs, networkx_graphs, bins=100, is_parallel=True,
+#                                       compute_emd=self.compute_emd)
+#         wandb.run.summary['clustering'] = clustering
+#         motif = motif_stats(self.test_graphs, networkx_graphs, motif_type='4cycle', ground_truth_match=None, bins=100,
+#                             compute_emd=self.compute_emd)
+#         wandb.run.summary['motif'] = motif
+#         print("Computing orbit stats...")
+#         orbit = orbit_stats_all(self.test_graphs, networkx_graphs, compute_emd=self.compute_emd)
+#         wandb.run.summary['orbit'] = orbit
+#         print("Computing accuracy...")
+#         acc = eval_acc_sbm_graph(networkx_graphs, refinement_steps=100, strict=True)
+#         wandb.run.summary['acc'] = acc
+#         print("Computing all fractions...")
+#         frac_unique, frac_unique_non_isomorphic, fraction_unique_non_isomorphic_valid = eval_fraction_unique_non_isomorphic_valid(
+#             networkx_graphs, self.train_graphs, is_sbm_graph)
+#         frac_non_isomorphic = 1.0 - eval_fraction_isomorphic(networkx_graphs, self.train_graphs)
 
-        to_log = {'sampling/degree_dist': degree,
-                  'sampling/spectre': spectre,
-                  'sampling/clustering': clustering,
-                  'sampling/motif': motif,
-                  'sampling/orbit': orbit,
-                  'sampling/acc': acc,
-                  'sampling/frac_unique': frac_unique,
-                  'sampling/frac_unique_non_iso': frac_unique_non_isomorphic,
-                  'sampling/frac_unic_non_iso_valid': fraction_unique_non_isomorphic_valid,
-                  'sampling/frac_non_iso': frac_non_isomorphic}
-        print("Sampling statistics", to_log)
-        wandb.log(to_log, commit=False)
+#         to_log = {'sampling/degree_dist': degree,
+#                   'sampling/spectre': spectre,
+#                   'sampling/clustering': clustering,
+#                   'sampling/motif': motif,
+#                   'sampling/orbit': orbit,
+#                   'sampling/acc': acc,
+#                   'sampling/frac_unique': frac_unique,
+#                   'sampling/frac_unique_non_iso': frac_unique_non_isomorphic,
+#                   'sampling/frac_unic_non_iso_valid': fraction_unique_non_isomorphic_valid,
+#                   'sampling/frac_non_iso': frac_non_isomorphic}
+#         print("Sampling statistics", to_log)
+#         wandb.log(to_log, commit=False)
 
     def reset(self):
         pass
@@ -860,6 +860,7 @@ class SpectreSamplingMetrics(nn.Module):
 
 
         print("Saving all adjacency matrices")
+        np.save(f"/localscratch/hsun409/diffusion_graph/Experiments-on-Graph-Generative-Models/digress_results/{name}_adjacency_matrices.npy", adjacency_matrices)
         np.savez('generated_adjs.npz', *adjacency_matrices)
         np.savez('generated_graphs.npz', *networkx_graphs)
         to_log = {}
